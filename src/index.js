@@ -1,4 +1,4 @@
-const validator = require('validator')
+//const validator = require('validator')
 // express setup 
 const express = require('express')
 const app = express()

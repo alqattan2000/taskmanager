@@ -3,15 +3,21 @@
 const express = require('express')
 const app = express()
 const port = process.env.PORT || 3000 // configure the port number
-app.use(express.json()) // to make express use json 
 
-// add models
-const User = require('./models/user')
-const Task = require('./models/task')
+// // add models
+// const User = require('./models/user')
+// const Task = require('./models/task')
 
-// requesting router
+// app.use((req,res,next) =>{
+
+//          res.status(503).send('Maintenance mode')
+
+// })
+
 const userRouter = require('./routers/user')
 const taskRouter = require('./routers/task')
+app.use(express.json()) // to make express use json 
+// requesting router
 app.use(userRouter)
 app.use(taskRouter)
 

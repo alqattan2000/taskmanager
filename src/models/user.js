@@ -1,3 +1,5 @@
+
+const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
 const mongoose = require('mongoose')
 const validator = require('validator')
@@ -41,8 +43,24 @@ const userSchema = new mongoose.Schema({
             }
 
         }
-    }
+    },
+    tokens: [{
+        token: {
+            type: String,
+            required: true
+        }
+    }]
 })
+
+// create user Token method
+userSchema.methods.generateAuthToken = async function () {
+    const user = this
+    const token = jwt.sign({ _id: user._id.toString()}, 'qattanthebest', { expiresIn: '1h' })
+    user.tokens = user.tokens.concat({token})
+    await user.save()
+    return token
+}
+
 //create new function (findByCredentials)
 userSchema.statics.findByCredentials = async(email,password) =>{
     const user = await User.findOne({email})
@@ -56,6 +74,7 @@ userSchema.statics.findByCredentials = async(email,password) =>{
     return user
 }
 
+
 // hash the plain test password before saving
 userSchema.pre('save', async function (next) {
     const user = this
@@ -66,5 +85,5 @@ userSchema.pre('save', async function (next) {
 })
 
 const User = mongoose.model('User', userSchema)
-User.createIndexes()
+
 module.exports= User

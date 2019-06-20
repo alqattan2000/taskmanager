@@ -1,3 +1,4 @@
+const validator = require('validator')
 const express = require('express')
 const router = new express.Router()
 const User = require('../models/user')
@@ -13,13 +14,22 @@ router.post('/users', async (req, res) => {
     } catch (e) {
         res.status(400).send(e)
     }
-    
 
     // user.save().then(() => {
     //     res.status(201).send(user)
     // }).catch((e) => {
     //     res.status(400).send(e)
     // })
+})
+
+//user login
+router.post('/users/login', async (req,res)=>{
+    try {
+        const user = await User.findByCredentials(req.body.email, req.body.password)
+        res.send(user)
+    } catch (e) {
+        res.status(400).send(e)
+    }
 })
 
 // retrieve users
@@ -60,7 +70,10 @@ router.patch("/users/:id", async (req, res) => {
     if (!validator.isMongoId(_id)){
         return res.status(400).send('invalid ID Provided')}
         try{
-            const user = await User.findByIdAndUpdate(_id, req.body , { new: true, runValidators:true })
+            const user = await User.findById(_id)
+            updates.forEach((update) => user[update] = req.body[update])
+            await user.save()
+            // const user = await User.findByIdAndUpdate(_id, req.body , { new: true, runValidators:true })
             if (!user){
                 return res.stat(404).send()
             }

@@ -23,3 +23,14 @@ require('./db/mongoose') // to make sure file will be run and we connect to data
 app.listen(port, () => {
     console.log('Server is pp on port: ' + port)
 })
+const bcryptjs = require('bcryptjs')
+
+// const myfun = async()=>{
+//     const password = 'Red12345!'
+//     const hashedPassword = await bcryptjs.hash(password, 8)
+
+//     console.log(password)
+//     console.log(hashedPassword)
+// }
+
+// myfun()

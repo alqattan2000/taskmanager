@@ -1,10 +1,10 @@
 const mongoose = require('mongoose')
 //course
 // const connectionURL = 'mongodb://127.0.0.1:27017'
-// const databaseName = 'tasks-manager-api'
+// const databaseName = 'tasks-manager-apiuniq'
 //mlab
-const connectionURL = 'mongodb://mongouser:mongopass01@ds133017.mlab.com:33017'
-const databaseName = 'qattandb'
+const connectionURL = 'mongodb://tmuser:tmpass123@ds341247.mlab.com:41247'
+const databaseName = 'task-manager'
 // const validator = require('validator')
 
 mongoose.connect(connectionURL + '/' + databaseName, {

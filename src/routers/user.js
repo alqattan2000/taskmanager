@@ -44,10 +44,34 @@ try {
         return token.token !== req.token
     })
     await req.user.save()
-    res.send(200)
+    res.send(req.user)
 } catch (e) {
     res.status(500).send()
 }
+})
+
+router.post('/users/logoutAll',auth, async(req,res)=>{
+    try {
+        req.user.tokens = []
+        await req.user.save()
+        res.send()
+    } catch (e) {
+        res.status(500).send(e)
+        
+    }
+})
+
+router.post('/users/logoutAllButMe',auth, async(req,res)=>{
+    try {
+        req.user.tokens = req.user.tokens.filter((token)=>{
+            return token.token === req.token
+        })
+        await req.user.save()
+        res.send()
+    } catch (e) {
+        res.status(500).send(e)
+        
+    }
 })
 
 // retrieve my profile

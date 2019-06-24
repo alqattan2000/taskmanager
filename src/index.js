@@ -29,23 +29,15 @@ require('./db/mongoose') // to make sure file will be run and we connect to data
 app.listen(port, () => {
     console.log('Server is up on port: ' + port)
 })
-const bcryptjs = require('bcryptjs')
-
-// const pet = {
-//     name: 'Hal'
-// }
-// pet.toJSON = function () {
-//     console.log(this)
-//     return this
-// }
-// console.log(JSON.stringify(pet))
-
-// const myfun = async()=>{
-//     const password = 'Red12345!'
-//     const hashedPassword = await bcryptjs.hash(password, 8)
-
-//     console.log(password)
-//     console.log(hashedPassword)
-// }
-
-// myfun()
+const Task = require('./models/task')
+const User = require('./models/user')
+const main = async () => {
+    // const task = await Task.findById('5d10a81f2693f8483806da1c')
+    // await task.populate('owner').execPopulate()
+    // console.log(task.owner)
+    const user = await User.findById('5d0f30d305a57f0017f74c4d')
+    await user.populate('tasks').execPopulate()
+    console.log(user.tasks)
+    
+}
+main()

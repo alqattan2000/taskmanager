@@ -1,3 +1,4 @@
+const Task = require('./task')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
 const mongoose = require('mongoose')
@@ -49,7 +50,7 @@ const userSchema = new mongoose.Schema({
             required: true
         }
     }]
-})
+},{timestamps: true})
 
 userSchema.virtual('tasks', {
     ref: 'Task',
@@ -94,6 +95,12 @@ userSchema.pre('save', async function (next) {
    if (user.isModified('password')) {
         user.password = await bcrypt.hash(user.password, 8)
    }
+    next()
+})
+//Delete user Tasks when user deleted
+userSchema.pre('remove', async function (next) {
+    const user = this
+   await Task.deleteMany({owner: user._id})
     next()
 })
 

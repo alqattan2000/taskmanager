@@ -178,6 +178,7 @@ router.delete('/users/me',auth ,async(req,res)=>{
     try {
         await req.user.remove()
         res.status(200).send(req.user)
+        // to read image into HTML <img src="data:image/jpg:base64,<binaryOfTheImage>"
     } catch (e) {
         res.status(500).send(e)
     }

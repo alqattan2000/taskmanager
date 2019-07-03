@@ -4,16 +4,19 @@ const mongoose = require('mongoose')
 // const databaseName = 'tasks-manager-apiuniq'
 //mlab
 //const connectionURL = 'mongodb://tmuser:tmpass123@ds341247.mlab.com:41247'
-const databaseName = 'task-manager'
+// const databaseName = 'task-manager'
 // const validator = require('validator')
 
-mongoose.connect(process.env.CONNECTION_URL + '/' + databaseName, {
+mongoose.connect(process.env.CONNECTION_URL + '/' + process.env.DATABASE_NAME, {
         useNewUrlParser: true,
         useCreateIndex: true,
         useFindAndModify: false
     })
 
 
+//      console.log(mongoose.STATES)
+
+// console.log(mongoose.STATES.toString)
     
 // const me = new User({
 //     name: 'Joelle',

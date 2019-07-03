@@ -1,7 +1,7 @@
-
 const multer = require('multer')
-
-
+const sharp = require('sharp')
+const {sendWelcomeEmail} = require('../email/account')
+const {sendCancellationEmail} = require('../email/account')
 const auth = require('../middleware/auth')
 const validator = require('validator')
 const express = require('express')
@@ -16,6 +16,7 @@ router.post('/users', async (req, res) => {
     try {
         
         await user.save()
+        sendWelcomeEmail(user.email,user.name)
         const token = await user.generateAuthToken()
         
         res.status(201).send({user, token})
@@ -82,7 +83,7 @@ const upload = multer({
         fileSize: 1000000
     },
     fileFilter(req,file,cb) {
-        console.log(file.originalname.toUpperCase())
+       // console.log(file.originalname.toUpperCase())
         if(!file.originalname.toUpperCase().match(/\.(JPG|PNG|JPEG|GIF)$/)){
             return cb(new Error('Please Upload Images (jpg/jpeg/png/jif'))
         }
@@ -91,7 +92,8 @@ const upload = multer({
 })
 
 router.post('/user/me/avatar', auth, upload.single('avatar'),async(req,res)=>{
-    req.user.avatar = req.file.buffer
+    const buffer = await sharp(req.file.buffer).resize({width: 250 , height: 250}).png().toBuffer()
+    req.user.avatar = buffer
     await req.user.save()
     res.send(req.user)
 },(error,req,res,next)=>{
@@ -104,14 +106,14 @@ router.get('/users/me', auth, async (req, res) => {
 })
 
 // retrieve users
-// router.get('/users', auth, async (req, res) => {
-//     try {
-//         const users = await User.find({})
-//         res.status(200).send(users)
-//     } catch(e) {
-//         res.status(500).send(e)
-//     }
-// })
+router.get('/users', auth, async (req, res) => {
+    try {
+        const users = await User.find({})
+        res.status(200).send(users)
+    } catch(e) {
+        res.status(500).send(e)
+    }
+})
 
 // retrieve user by ID
 // router.get('/users/:id', async (req, res) => {
@@ -177,6 +179,7 @@ router.patch("/users/me", auth, async (req, res) => {
 router.delete('/users/me',auth ,async(req,res)=>{
     try {
         await req.user.remove()
+        sendCancellationEmail(req.user.email,req.user.name)
         res.status(200).send(req.user)
         // to read image into HTML <img src="data:image/jpg:base64,<binaryOfTheImage>"
     } catch (e) {
@@ -198,17 +201,17 @@ router.get('/users/:id/avatar', async(req,res)=>{
     try {
         
         const user = await User.findById(req.params.id)
-        console.log(user.avatar)
+        //console.log(user.avatar)
         if (!user || !user.avatar){
             throw new Error()
         }
-        res.set('Content-Type','image/jpg')
+        res.set('Content-Type','image/png')
         res.send(user.avatar)
     } catch (e) {
         res.status(404).send(e)
     }
 })
-// //delete user
+// // //delete user
 // router.delete('/users/:id',async(req,res)=>{
 //     const _id = req.params.id
 //     if (!validator.isMongoId(_id)){
@@ -219,7 +222,7 @@ router.get('/users/:id/avatar', async(req,res)=>{
 //             res.status(200).send(user)
 //         } catch (e) {
 //             res.status(500).send(e)
-//         }
+// //         }
 // })
 
 

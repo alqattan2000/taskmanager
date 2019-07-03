@@ -3,18 +3,18 @@ const mongoose = require('mongoose')
 // const connectionURL = 'mongodb://127.0.0.1:27017'
 // const databaseName = 'tasks-manager-apiuniq'
 //mlab
-const connectionURL = 'mongodb://tmuser:tmpass123@ds341247.mlab.com:41247'
+//const connectionURL = 'mongodb://tmuser:tmpass123@ds341247.mlab.com:41247'
 const databaseName = 'task-manager'
 // const validator = require('validator')
 
-mongoose.connect(connectionURL + '/' + databaseName, {
+mongoose.connect(process.env.CONNECTION_URL + '/' + databaseName, {
         useNewUrlParser: true,
         useCreateIndex: true,
         useFindAndModify: false
     })
 
 
-
+    
 // const me = new User({
 //     name: 'Joelle',
 //     email: 'alqattan2018@gmail.com   ',

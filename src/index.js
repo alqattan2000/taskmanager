@@ -4,7 +4,7 @@ const taskRouter = require('./routers/task')
 // express setup 
 const express = require('express')
 const app = express()
-const port = process.env.PORT || 3000 // configure the port number
+const port = process.env.PORT // configure the port number
 
 const multer = require('multer')
 
@@ -25,7 +25,6 @@ const upload = multer({
         if (!file.originalname.match(/\.(doc|docx)$/)){
             return cb(new Error('Please Upload a Word Doc'))
         }
-        console.log(file.filename)
         cb(undefined,true)
         /*  cb(new Error('file must be ...'))
             cb(undefined,true)
